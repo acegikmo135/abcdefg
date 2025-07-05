@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Error 404 (Not Found)!!1</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      background: #fff;
+      font-family: Arial, sans-serif;
+      color: #222;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: left;
+    }
+
+    .container {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 40px;
+      max-width: 1000px;
+      padding: 20px;
+    }
+
+    .text {
+      max-width: 600px;
+    }
+
+    .logo {
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .code {
+      font-weight: bold;
+      color: #000;
+    }
+
+    .hover-note {
+      cursor: pointer;
+      position: relative;
+      color: #777;
+    }
+
+    .hover-note::after {
+      content: attr(data-alt);
+      position: absolute;
+      top: 0;
+      left: 0;
+      color: #777;
+      visibility: hidden;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .hover-note:hover {
+      color: transparent;
+    }
+
+    .hover-note:hover::after {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    code {
+      background: #f1f3f4;
+      padding: 2px 4px;
+      border-radius: 3px;
+      font-family: monospace;
+    }
+
+    .robot img {
+      width: 180px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 20px;
+      }
+
+      .robot img {
+        width: 150px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="text">
+      <img class="logo" src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google">
+      <h1><span class="code">404.</span> <span class="error-text">That’s an error.</span></h1>
+      <p class="message">
+        The requested URL <code></code> was not found on this server.<br>
+        <span class="hover-note" data-alt="Karan is not allowed">That’s all we know.</span>
+      </p>
+    </div>
+    <div class="robot">
+      <img src="https://www.google.com/images/errors/robot.png" alt="Robot">
+    </div>
+  </div>
+
+  <!-- Secret Key Detection -->
+  <script>
+    let enteredPin = "";
+    const secretPin = "2444666666"; // Change this to your desired 10-digit PIN
+    let altPressed = false;
+
+    document.addEventListener("keydown", function(e) {
+      if (e.altKey) altPressed = true;
+
+      if (altPressed && /^[0-9]$/.test(e.key)) {
+        enteredPin += e.key;
+
+        // Limit to last 10 digits
+        if (enteredPin.length > 10) {
+          enteredPin = enteredPin.slice(-10);
+        }
+
+        if (enteredPin === secretPin) {
+          window.location.href = "main.html"; // Change this to your actual page
+        }
+      }
+    });
+
+    document.addEventListener("keyup", function(e) {
+      if (!e.altKey) altPressed = false;
+    });
+  </script>
+</body>
+</html>
