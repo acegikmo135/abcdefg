@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Chapters & Code Boxes</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* Dark background */
+            color: #e2e8f0; /* Light text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #2d3748; /* Slightly lighter dark for container */
+            border-radius: 1.5rem; /* More rounded corners */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 800px;
+            transition: all 0.3s ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .chapter-item, .codebox-item, .back-button {
+            cursor: pointer;
+            padding: 1rem 1.5rem;
+            margin-bottom: 0.75rem;
+            border-radius: 0.75rem;
+            background-color: #4a5568; /* Darker grey for items */
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chapter-item:hover, .codebox-item:hover, .back-button:hover {
+            background-color: #636b7d; /* Lighter grey on hover */
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .chapter-item h2, .codebox-item h3 {
+            font-weight: 600;
+            color: #cbd5e0; /* Slightly lighter text for headings */
+        }
+
+        .codebox-placeholder {
+            opacity: 0; /* Hidden placeholder */
+            position: absolute; /* Allow it to be positioned off-screen */
+            top: -9999px;
+            left: -9999px;
+        }
+
+        .copy-notification {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #48bb78; /* Green for success */
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease-out, visibility 0.3s ease-out;
+            z-index: 1000;
+            font-weight: 500;
+        }
+
+        .copy-notification.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+            .chapter-item, .codebox-item, .back-button {
+                padding: 0.75rem 1rem;
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container">
+        <!-- Main Chapter List Section -->
+        <div id="main-chapter-list" class="space-y-4">
+            <h1 class="text-3xl font-bold text-center mb-6 text-gray-100">HTML Chapters</h1>
+            <div class="chapter-item" data-chapter-id="6">
+                <h2 class="text-xl">6. Inserting images and lists in HTML5</h2>
+                <!-- Arrow icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+            </div>
+            <div class="chapter-item" data-chapter-id="7">
+                <h2 class="text-xl">7. Tables and linking in HTML5</h2>
+                <!-- Arrow icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Chapter Detail Section (initially hidden) -->
+        <div id="chapter-detail" class="hidden space-y-4">
+            <button class="back-button w-full text-left flex items-center mb-6" id="back-to-main">
+                <!-- Back arrow icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+                <span class="text-lg">Back to Chapters</span>
+            </button>
+            <h2 id="chapter-title" class="text-2xl font-bold text-center mb-6 text-gray-100"></h2>
+            <div id="codebox-list" class="space-y-3">
+                <!-- Code boxes will be injected here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Copy Notification -->
+    <div id="copy-notification" class="copy-notification">
+        Text copied to clipboard!
+    </div>
+
+    <script>
+        // Data structure for chapters and their code boxes
+        const chaptersData = {
+            6: {
+                title: "6. Inserting images and lists in HTML5",
+                codeboxes: [
+                    { name: "Code Box-1", content: '<!DOCTYPE html>\n<html>\n<head>\n<style>\nhl {\ncolor: red;\nbackground-color: pink;\nfont-family: Algerian;\n}\n</style>\n</head>\n<body>\n<h1>The Industrial Revolution</h1>\n<h2><u>The Industrial Revolution began in England</u></h2><br><br>\n<p style=\"color: blue;\">The Industrial Revolution was a historical period of rapid industrialization, technological advancement, and social change, transforming economies and societies.</p><br>\n<p><img src=\"https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTJzu-SBDrAZgDn1u3XfcYhqHi74p9OBWiYZh1lzttk1VU4mIQq\" alt=\"Industrial Revolution Image\"></p>\n<p style=\"color: red; font-family: calibri;\">The textile industry was first mechanised.</p><br><br>\nIndustrial revolution led to the rise of capitalism.\n</body>\n</html>' },
+                    { name: "Code Box-2", content: '<!DOCTYPE html>\n<html>\n<head>\n<style>\nhl {\ncolor: red;\nbackground-color: pink;\nfont-family: Algerian;\n}\n</style>\n</head>\n<body>\n<h1>The Industrial Revolution</h1>\n<h2><u>The Industrial Revolution began in England</u></h2><br><br>\n<p style=\"color: blue;\">The Industrial Revolution was a historical period of rapid industrialization, technological advancement, and social change, transforming economies and societies.</p><br>\n<img src=\"https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTJzu-SBDrAZgDn1u3XfcYhqHi74p9OBWiYZh1lzttk1VU4mIQq\" style=\"float: right; height: 200px; width: 40%; border: 4px dotted; border-radius: 20%\">\n<p style=\"color: red; font-family: calibri;\">The textile industry was first mechanised.</p><br><br>\nIndustrial revolution led to the rise of capitalism.\n</body>\n</html>' },
+                    { name: "Code Box-3", content: '<!DOCTYPE html>\n<html>\n<head>\n<style>\nh1 {\ncolor: red;\nbackground-color: pink;\nfont-family: Algerian;\n}\n</style>\n</head>\n<body>\n<h1>The Industrial Revolution</h1>\n<h2><u>The Industrial Revolution began in England</u></h2><br><br>\n<p style=\"color: blue;\">The Industrial Revolution was a historical period of rapid industrialization, technological advancement, and social change, transforming economies and societies.</p><br>\n<img src=\"https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcTJzu-SBDrAZgDn1u3XfcYhqHi74p9OBWiYZh1lzttk1VU4mIQq\" style=\"float: right; height: 200px; width: 40%; border: 4px dotted; border-radius: 20%\">\n<p style=\"color: red; font-family: calibri;\">The textile industry was first mechanised.</p><br><br>\nIndustrial revolution led to the rise of capitalism.<br><br>\n<video src=\"C:\Users\rverma\OneDrive - Cambridge\Desktop\Industrial Revolution\The Industrial Revolution.mp4\" controls height=\"200\" width=\"50%\"></video>\n</body>\n</html>' },
+                    { name: "Code Box-4", content: '<html>\n<head>\n<style>\nh1{color: red; background-color: pink; font-family: algerian;}\n</style>\n</head>\n<body>\n<h1> Movements in India\'s Freedom Struggle</h1>\n<ol type=\"1\" start=\"3\">\n<li> Khilafat Movement</li>\n<li> Non-Cooperation Movement</li>\n<li> Civil Disobedience Movement</li>\n</ol>\n</body>\n</html>' },
+                    { name: "Code Box-5", content: '<html>\n<head>\n<style>\nh1{color: red; background-color: pink; font-family: algerian;}\n</style>\n</head>\n<body>\n<h1> Movements in India\'s Freedom Struggle</h1>\n<ul type=\"disc\">\n<li> Non-Cooperation Movement</li>\n<li> Civil-Disobedience Movement</li>\n</ul>\n</body>\n</html>' },
+                    { name: "Code Box-6", content: '<html>\n<head>\n</head>\n<body>\n<ul style=\"list-style-type:disc\">\n<li>English East India Company</li>\n<li>French East India Company</li>\n<li>British Conquest of Bengal</li>\n</ul>\n<ol style=\"list-style-type:lower-roman\">\n<li>Battle of Plassey</li>\n<li>Battle of Buxar</li>\n</ol>\n</body>\n</html>' },
+                    { name: "Code Box-7", content: '<!DOCTYPE html>\n<html>\n<head>\n<title>States and Capitals of India</title>\n</head>\n<body>\n<h1>States and Capitals of India</h1>\n<ul>\n<li><b>Tamil Nadu</b>\n<ul>\n<li>Capital: Chennai</li>\n</ul>\n</li>\n<li><b>Rajasthan</b>\n<ul>\n<li>Capital: Jaipur</li>\n</ul>\n</li>\n<li><b>West Bengal</b>\n<ul>\n<li>Capital: Kolkata</li>\n</ul>\n</li>\n<li><b>Andhra Pradesh</b>\n<ul>\n<li>Capital: Hyderabad</li>\n</ul>\n</li>\n<li><b>Maharashtra</b>\n<ul>\n<li>Capital: Mumbai</li>\n</ul>\n</li>\n</ul>\n</body>\n</html>' },
+                    { name: "Code Box-8", content: '<!DOCTYPE html>\n<html>\n<head>\n    <title>Robotics Club</title>\n</head>\n<body>\n    <h1>Welcome to the Robotics Club</h1>\n\n    <h2>Objective</h2>\n    <p>The objective of our robotics club is to provide a platform for students interested in robotics to explore and develop their skills in a collaborative environment. We aim to foster creativity, problem-solving and teamwork through hands-on projects and competitions.</p>\n\n    <h2>Monthly Activities</h2>\n    <ul>\n        <li>Robot Building Workshop</li>\n        <li>Guest Speaker Session on Robotics Innovations</li>\n        <li>Line Following Robot Challenge</li>\n        <li>Drone Programming and Flying Demonstration</li>\n        <li>Robotics Coding Competition</li>\n        <li>Field Trip to Robotics Research Center</li>\n        <li>Team Project Showcase and Feedback Session</li>\n    </ul>\n\n    <h2>Membership</h2>\n    <p>To become a member of our robotics club, please fill out the membership form available on our website or contact us directly. Membership is open to all students of our school/university, regardless of their prior experience in robotics. Benefits of joining our club include:</p>\n    <ul>\n        <li>Access to robotics workshops, events and resources</li>\n        <li>Opportunity to collaborate with like-minded individuals</li>\n        <li>Participation in local and regional robotics competitions</li>\n        <li>Networking with professionals in the field of robotics</li>\n        <li>Enhancement of technical skills and knowledge in robotics</li>\n    </ul>\n</body>\n</html>'},
+                    { name: "Code Box-9", content: '<!DOCTYPE html>\n<html>\n<head>\n    <title>Types of Animals</title>\n</head>\n<body>\n    <h1>Types of Animals</h1>\n\n    <h2>Mammals</h2>\n    <ul>\n        <li>Lion</li>\n        <li>Elephant</li>\n        <li>Dolphin</li>\n    </ul>\n\n    <h2>Birds</h2>\n    <ul>\n        <li>Eagle</li>\n        <li>Ostrich</li>\n        <li>Hummingbird</li>\n    </ul>\n\n    <h2>Reptiles</h2>\n    <ul>\n        <li>Crocodile</li>\n        <li>Snake</li>\n        <li>Turtle</li>\n    </ul>\n\n    <h2>Amphibians</h2>\n    <ul>\n        <li>Frog</li>\n        <li>Salamander</li>\n        <li>Newt</li>\n    </ul>\n\n    <h2>Fish</h2>\n    <ul>\n        <li>Shark</li>\n        <li>Clownfish</li>\n        <li>Tuna</li>\n    </ul>\n</body>\n</html>'}
+                ]
+            },
+            7: {
+                title: "7. Tables and linking in HTML5",
+                codeboxes: [
+                    { name: "Code Box-1", content: '<html>\n<head>\n    <title>Climate Zones</title>\n    <style>\n        table, th, td {border: 2px solid green}\n    </style>\n</head>\n<body>\n    <table>\n        <caption>Types of Climate Zones</caption>\n        <tr>\n            <th>Tropical Climate</th>\n            <th>Desert Climate</th>\n        </tr>\n        <tr>\n            <td>Brazil</td>\n            <td>1</td>\n        </tr>\n        <tr>\n            <td>Chile</td>\n            <td>2</td>\n        </tr>\n    </table>\n</body>\n</html>' },
+                    { name: "Code Box-2", content: '<html>\n<head>\n    <title>Climate Zones</title>\n    <style>\n        table, th, td {\n            border: 4px solid red;\n            background-color: pink;\n            color: blue;\n        }\n    </style>\n</head>\n<body>\n    <table style=\"height:80px; width:80%; float: right\">\n        <caption>Types of Climate Zones</caption>\n        <tr>\n            <th>Tropical Climate</th>\n            <th>Desert Climate</th>\n        </tr>\n        <tr>\n            <td>Brazil</td>\n            <td>1</td>\n        </tr>\n        <tr>\n            <td>Chile</td>\n            <td>2</td>\n        </tr>\n    </table>\n</body>\n</html>' },
+                    { name: "Code Box-3", content: '<html>\n<head>\n    <title>Climate Zones</title>\n    <style>\n        table, th, td {\n            border: 4px solid red;\n            background-color: yellow;\n            color: green;\n        }\n    </style>\n</head>\n<body>\n    <table style=\"height: 180px; width: 80%; float: left;\">\n        <caption>Types of Climate Zones</caption>\n        <tr>\n            <th style=\"vertical-align: \'bottom\'\">Tropical Climate</th>\n            <th>Desert Climate</th>\n        </tr>\n        <tr>\n            <td>Brazil</td>\n            <td style=\"text-align: right; vertical-align: top;\">1</td>\n        </tr>\n        <tr>\n            <td>Chile</td>\n            <td>2</td>\n        </tr>\n    </table>\n</body>\n</html>' },
+                    { name: "Code Box-4", content: '<html>\n<head>\n    <title>Climate Zones</title>\n    <style>\n        table, th, td {\n            border: 4px solid red;\n            background-color: pink;\n            color: blue;\n            padding: 12px;\n        }\n    </style>\n</head>\n<body>\n    <table style=\"height: 80px; width: 80%; float: right; border-spacing: 12px;\">\n        <caption>Types of Climate Zones</caption>\n        <tr>\n            <th>Tropical Climate</th>\n            <th>Desert Climate</th>\n        </tr>\n        <tr>\n            <td>1</td>\n            <td>Brazil</td>\n        </tr>\n        <tr>\n            <td>2</td>\n            <td>Chile</td>\n        </tr>\n    </table>\n</body>\n</html>' },
+                    { name: "Code Box-5", content: '<html>\n<head>\n    <title>Climate Zones</title>\n    <style>\n        table, th, td {\n            border: 4px solid red;\n            background-color: pink;\n            color: blue;\n            padding: 12px;\n        }\n    </style>\n</head>\n<body>\n    <table style=\"height: 80px; width: 80%; float: right; border-spacing: 12px; border-collapse: collapse;\">\n        <caption>Types of Climate Zones</caption>\n        <tr>\n            <th>Tropical Climate</th>\n            <th>Desert Climate</th>\n        </tr>\n        <tr>\n            <td>Brazil</td>\n            <td>1</td>\n        </tr>\n        <tr>\n            <td>Chile</td>\n            <td>2</td>\n        </tr>\n    </table>\n</body>\n</html>' },
+                    { name: "Code Box-6", content: '<html>\n<head>\n    <title>Climate Zones</title>\n    <style>\n        table, th, td {\n            border: 4px solid red;\n            background-color: pink;\n            color: blue;\n            padding: 12px;\n        }\n    </style>\n</head>\n<body>\n    <table style=\"height: 80px; width: 80%; float: right; border-spacing: 12px; border-collapse: collapse;\">\n        <caption>Types of Climate Zones</caption>\n        <tr>\n            <th rowspan=\"2\">Tropical Climate</th>\n            <th>Desert Climate</th>\n        </tr>\n        <tr>\n            <td colspan=\"2\">1</td>\n        </tr>\n        <tr>\n            <td>Brazil</td>\n        </tr>\n        <tr>\n            <td>Chile</td>\n            <td>2</td>\n        </tr>\n    </table>\n</body>\n</html>' },
+                    { name: "Code Box-7", content: '<html>\n<head>\n    <title>Links in html</title>\n</head>\n<body>\n    <a href=\"second.html\">click here to open another document</a>\n    <br><br>\n    <a href=\"http://www.google.com\">click here to open google webpage</a>\n    <br><br>\n    <a href=\"mailto:abc.xyz@gmail.com\">click here to open my mailbox</a>\n</body>\n</html>' },
+                    { name: "Code Box-8", content: '<html>\n<head>\n    <title>link properties in CSS</title>\n    <style>\n        a:link {\n            color:green;\n            background-color:yellow;\n        }\n        a:visited {\n            color:pink;\n        }\n        a:hover {\n            color:black;\n        }\n        a:active {\n            color:red;\n        }\n    </style>\n</head>\n<body>\n    <p style=\"font-size:40px\">\n        <a href=\"www.google.com\">Click here</a>\n    </p>\n</body>\n</html>'},
+                    { name: "Code Box-9", content: '<html>\n<head>\n    <title>link properties in CSS</title>\n    <style>\n        a:link {\n            color: green;\n            background-color: yellow;\n        }\n        a:visited {\n            color: pink;\n        }\n        a:hover {\n            color: black;\n        }\n        a:active {\n            color: red;\n        }\n    </style>\n</head>\n<body>\n    <p style=\"font-size:40px\">Click on the image to open the link.\n        <a href=\"www.google.com\">\n            <img src=\"C:\Users\ABC.jpg\">\n        </a>\n    </p>\n</body>\n</html>'}
+
+                ]
+            }
+        };
+
+        // Get DOM elements
+        const mainChapterListDiv = document.getElementById('main-chapter-list');
+        const chapterDetailDiv = document.getElementById('chapter-detail');
+        const chapterTitleElement = document.getElementById('chapter-title');
+        const codeboxListDiv = document.getElementById('codebox-list');
+        const backToMainButton = document.getElementById('back-to-main');
+        const copyNotification = document.getElementById('copy-notification');
+
+        /**
+         * Shows the chapter detail section and populates it with code boxes.
+         * @param {string} chapterId - The ID of the chapter to display.
+         */
+        function showChapterDetail(chapterId) {
+            const chapter = chaptersData[chapterId];
+            if (!chapter) {
+                console.error("Chapter not found:", chapterId);
+                return;
+            }
+
+            // Update chapter title
+            chapterTitleElement.textContent = chapter.title;
+
+            // Clear previous code boxes
+            codeboxListDiv.innerHTML = '';
+
+            // Generate and append new code boxes
+            chapter.codeboxes.forEach((box, index) => {
+                const codeboxItem = document.createElement('div');
+                codeboxItem.className = 'codebox-item flex items-center justify-between';
+                codeboxItem.innerHTML = `
+                    <h3 class="text-lg">${box.name}</h3>
+                    <!-- Copy icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2.586m-4.414-4.414L9.586 10H8m4v-4" />
+                    </svg>
+                    <textarea class="codebox-placeholder" id="codebox-content-${chapterId}-${index}">${box.content.replace(/\\n/g, '\n')}</textarea>
+                `;
+                // Attach click event for copying
+                codeboxItem.addEventListener('click', () => {
+                copyToClipboard(codeboxItem.querySelector('.codebox-placeholder'));
+                window.close(); // This will try to close the tab/window
+                });
+                codeboxListDiv.appendChild(codeboxItem);
+            });
+
+            // Toggle visibility
+            mainChapterListDiv.classList.add('hidden');
+            chapterDetailDiv.classList.remove('hidden');
+        }
+
+        /**
+         * Copies the text from a given textarea element to the clipboard.
+         * Shows a notification that disappears after 1 second.
+         * @param {HTMLTextAreaElement} element - The textarea element containing the text to copy.
+         */
+        function copyToClipboard(element) {
+            if (!element) {
+                console.error("Element to copy is null or undefined.");
+                return;
+            }
+            element.select(); // Select the text in the textarea
+            element.setSelectionRange(0, 99999); // For mobile devices
+
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showCopyNotification();
+                } else {
+                    console.error('Failed to copy text using execCommand.');
+                }
+            } catch (err) {
+                console.error('Error copying text:', err);
+                fallbackCopyToClipboard(element.value); // Fallback for browsers that don't support execCommand well
+            }
+
+            // Deselect the text
+            element.setSelectionRange(0, 0);
+        }
+
+        /**
+         * Fallback clipboard copy using a temporary textarea (less reliable in iframe).
+         * @param {string} text - The text to copy.
+         */
+        function fallbackCopyToClipboard(text) {
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = text;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            try {
+                document.execCommand('copy');
+                showCopyNotification();
+            } catch (err) {
+                console.error('Fallback copy failed:', err);
+            }
+            document.body.removeChild(tempTextArea);
+        }
+
+        /**
+         * Shows the copy notification for 1 second.
+         */
+        function showCopyNotification() {
+            copyNotification.classList.add('show');
+            setTimeout(() => {
+                copyNotification.classList.remove('show');
+            }, 1000); // Auto-close after 1 second
+        }
+
+        // Event Listeners for main chapter list
+        document.querySelectorAll('.chapter-item').forEach(item => {
+            item.addEventListener('click', (event) => {
+                const chapterId = event.currentTarget.dataset.chapterId;
+                showChapterDetail(chapterId);
+            });
+        });
+
+        // Event Listener for back button
+        backToMainButton.addEventListener('click', () => {
+            chapterDetailDiv.classList.add('hidden');
+            mainChapterListDiv.classList.remove('hidden');
+        });
+
+    </script>
+</body>
+</html>
